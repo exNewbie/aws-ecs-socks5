@@ -8,8 +8,8 @@ main()
   IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.ap-southeast-2.amazonaws.com/update-dns"
   image_tag="${IMAGE}:latest"
 
-  # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  # unzip awscliv2.zip
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip
 
   docker build --compress --squash --rm -t $image_tag .
 
