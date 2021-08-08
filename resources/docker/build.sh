@@ -4,14 +4,15 @@ set -eu -o pipefail
 
 main()
 {
+  region="${1}"
   AWS_ACCOUNT_ID=$( aws sts get-caller-identity | jq -r .Account )
   IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.ap-southeast-2.amazonaws.com/update-dns"
   image_tag="${IMAGE}:latest"
 
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  unzip awscliv2.zip
+  curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip > /dev/null
 
-  docker build --compress --squash --rm -t $image_tag .
+  docker build --compress --squash --rm -t $image_tag --build-arg AWS_REGION=$region .
 
   aws ecr get-login-password \
     | docker login --username AWS --password-stdin \
