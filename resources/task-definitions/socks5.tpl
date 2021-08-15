@@ -10,10 +10,10 @@
         "secrets": [
             {
                 "name": "PROXY_PASSWORD",
-                "value": "${proxy_password}"
+                "valueFrom": "${proxy_password}"
             }, {
                 "name": "PROXY_USER",
-                "value": "${proxy_user}"
+                "valueFrom": "${proxy_user}"
             }
         ],
         "essential": true,
