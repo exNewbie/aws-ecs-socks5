@@ -8,5 +8,7 @@ module "socks5" {
 
   proxy_user     = var.proxy_user
   proxy_password = var.proxy_password
-}
 
+  vpc_id  = data.aws_vpc.selected.id
+  subnets = data.aws_subnet_ids.selected.ids
+}

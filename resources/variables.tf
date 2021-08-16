@@ -12,6 +12,15 @@ variable "proxy_password" {
   description = "Proxy Password"
 }
 
+variable "vpc_id" {
+  type = string
+}
+
+variable "subnets" {
+  type        = list(any)
+  description = "Subnets that the task will run on"
+}
+
 # ------------------------------------------------------------------------------
 # Data
 # ------------------------------------------------------------------------------
