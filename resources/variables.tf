@@ -16,11 +16,6 @@ variable "vpc_id" {
   type = string
 }
 
-variable "subnets" {
-  type        = list(any)
-  description = "Subnets that the task will run on"
-}
-
 # ------------------------------------------------------------------------------
 # Data
 # ------------------------------------------------------------------------------
@@ -29,7 +24,11 @@ data "template_file" "socks5" {
   template = file("${path.module}/task-definitions/socks5.tpl")
 
   vars = {
-    proxy_user     = var.proxy_user
-    proxy_password = var.proxy_password
+    proxy_user     = "/socks5/user"
+    proxy_password = "/socks5/password"
   }
 }
+
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}

@@ -24,3 +24,24 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_AmazonECSTaskExecu
   role       = aws_iam_role.ecs_task_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
+
+resource "aws_iam_role_policy" "ssm" {
+  name = "ecsAccessSSM-socks5"
+  role = aws_iam_role.ecs_task_execution.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ssm:GetParameters",
+          "ssm:GetParameter"
+        ]
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/socks5/*"
+        ]
+      }
+    ]
+  })
+}
