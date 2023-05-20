@@ -7,6 +7,15 @@
                 "value": "0.0.0.0:1080"
             }
         ],
+        "secrets": [
+            {
+                "name": "PROXY_PASSWORD",
+                "valueFrom": "${proxy_password}"
+            }, {
+                "name": "PROXY_USER",
+                "valueFrom": "${proxy_user}"
+            }
+        ],
         "essential": true,
         "image": "docker.io/xkuma/socks5",
         "logConfiguration": {

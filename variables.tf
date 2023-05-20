@@ -1,14 +1,8 @@
-# ------------------------------------------------------------------------------
-# Local Variables
-# ------------------------------------------------------------------------------
-
-locals {
-  aws_profile = var.aws_profile == "" ? "default" : var.aws_profile
+variable "enable_auth" {
+  type        = bool
+  description = "Enable Basic Authentication"
+  default     = true
 }
-
-# ------------------------------------------------------------------------------
-# Variables
-# ------------------------------------------------------------------------------
 
 variable "proxy_user" {
   type        = string
@@ -40,27 +34,4 @@ variable "subnet_keyword" {
   type        = string
   description = "Key word of Subnets"
   default     = ""
-}
-
-# ------------------------------------------------------------------------------
-# Data
-# ------------------------------------------------------------------------------
-
-data "aws_vpc" "selected" {
-  default = var.vpc_id == "" ? true : false
-  id      = var.vpc_id == "" ? null : var.vpc_id
-}
-
-data "aws_subnet_ids" "selected" {
-  vpc_id = data.aws_vpc.selected.id
-
-  # dynamic "filter" {
-  #   for_each = var.vpc_id == "" ? 0 : 1
-  #   content {
-  #     filter {
-  #       name   = "tag:Name"
-  #       values = ["*${subnet_keyword}*"]
-  #     }
-  #   }
-  # }
 }
