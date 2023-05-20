@@ -27,5 +27,5 @@ resource "aws_security_group_rule" "socks5" {
   from_port         = "1080"
   to_port           = "1080"
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = var.allowed_networks
 }

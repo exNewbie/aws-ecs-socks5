@@ -11,4 +11,6 @@ module "socks5" {
   proxy_password = var.proxy_password
 
   vpc_id = data.aws_vpc.selected.id
+
+  allowed_networks = var.allowed_networks
 }
