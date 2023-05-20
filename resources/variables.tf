@@ -18,3 +18,9 @@ variable "proxy_password" {
 variable "vpc_id" {
   type = string
 }
+
+variable "allowed_networks" {
+  type        = list(string)
+  description = ""
+  default     = ["0.0.0.0/0"]
+}
