@@ -39,5 +39,4 @@ variable "subnet_keyword" {
 variable "allowed_networks" {
   type        = list(string)
   description = ""
-  default     = ["0.0.0.0/0"]
 }
