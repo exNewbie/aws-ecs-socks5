@@ -12,5 +12,5 @@ module "socks5" {
 
   vpc_id = data.aws_vpc.selected.id
 
-  allowed_networks = var.allowed_networks
+  allowed_networks = concat(var.allowed_networks, ["${chomp(data.http.my_ip.body)}/32"])
 }
