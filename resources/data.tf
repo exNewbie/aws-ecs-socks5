@@ -16,7 +16,15 @@ data "aws_subnets" "subnets" {
 }
 
 data "external" "count_tasks" {
-  program = ["/bin/bash", "${path.module}/scripts/count-tasks.sh"]
+  depends_on = [
+    aws_ecs_cluster.socks5
+  ]
+
+  program = [
+    "/bin/bash",
+    "${path.module}/scripts/count-tasks.sh",
+    var.aws_profile
+  ]
 
   query = {
     cluster_name = "socks5"

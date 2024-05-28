@@ -24,3 +24,9 @@ variable "allowed_networks" {
   description = ""
   default     = ["0.0.0.0/0"]
 }
+
+variable "aws_profile" {
+  type        = string
+  description = "AWS profile"
+}
+
