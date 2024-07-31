@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+    bucket  = "<your-bucket>"
+    region  = "ap-southeast-2"
+    key     = "aws-ecs-socks5-us-east-1"
+    profile = "personal"
+  }
+}
+
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile
