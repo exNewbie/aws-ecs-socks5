@@ -30,3 +30,8 @@ variable "aws_profile" {
   description = "AWS profile"
 }
 
+variable "aws_region" {
+  type        = string
+  description = "AWS region"
+}
+

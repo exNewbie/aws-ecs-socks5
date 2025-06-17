@@ -16,6 +16,7 @@ module "socks5" {
   source = "./resources"
 
   aws_profile = var.aws_profile
+  aws_region  = var.aws_region
 
   enable_auth    = var.enable_auth
   proxy_user     = var.proxy_user

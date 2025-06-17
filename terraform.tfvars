@@ -1,8 +1,7 @@
 aws_profile = "personal"
 
 aws_region = "us-east-1"
-
-vpc_id = "vpc-xxxxx"
+vpc_id     = "vpc-xxxxx"
 
 enable_auth    = false
 proxy_user     = "user"

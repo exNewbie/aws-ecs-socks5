@@ -32,20 +32,3 @@ data "external" "count_tasks" {
   }
 }
 
-data "aws_ecs_task_execution" "socks5" {
-  count = data.external.count_tasks.result["count"] > 0 ? 0 : 1
-
-  cluster         = aws_ecs_cluster.socks5.id
-  task_definition = aws_ecs_task_definition.socks5.arn
-  desired_count   = 1
-
-  capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-  }
-
-  network_configuration {
-    subnets          = data.aws_subnets.subnets.ids
-    security_groups  = [aws_security_group.socks5.id]
-    assign_public_ip = true
-  }
-}
