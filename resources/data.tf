@@ -28,7 +28,7 @@ data "external" "count_tasks" {
 
   query = {
     cluster_name = "socks5"
-    aws_region   = data.aws_region.current.name
+    aws_region   = data.aws_region.current.region
   }
 }
 

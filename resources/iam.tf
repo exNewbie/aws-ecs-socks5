@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs_task_execution" {
-  name = "ecsTaskExecutionRole-socks5"
+  name = "ecsTaskExecutionRole-socks5-${var.aws_region}"
 
   assume_role_policy = <<EOF
 {
@@ -17,7 +17,6 @@ resource "aws_iam_role" "ecs_task_execution" {
   ]
 }
 EOF
-
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_AmazonECSTaskExecutionRolePolicy" {
@@ -39,7 +38,7 @@ resource "aws_iam_role_policy" "ssm" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/socks5/*"
+          "arn:aws:ssm:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:parameter/socks5/*"
         ]
       }
     ]
