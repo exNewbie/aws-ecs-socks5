@@ -15,20 +15,15 @@ data "aws_subnets" "subnets" {
   }
 }
 
-data "external" "count_tasks" {
-  depends_on = [
-    aws_ecs_cluster.socks5
-  ]
+data "aws_ecs_task_execution" "running_task" {
+  cluster         = aws_ecs_cluster.socks5.name
+  task_definition = aws_ecs_task_definition.socks5.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
 
-  program = [
-    "/bin/bash",
-    "${path.module}/scripts/count-tasks.sh",
-    var.aws_profile
-  ]
-
-  query = {
-    cluster_name = "socks5"
-    aws_region   = data.aws_region.current.region
+  network_configuration {
+    subnets          = data.aws_subnets.subnets.ids
+    security_groups  = [aws_security_group.socks5.id]
+    assign_public_ip = true
   }
 }
-
