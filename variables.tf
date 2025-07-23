@@ -40,3 +40,8 @@ variable "allowed_networks" {
   type        = list(string)
   description = ""
 }
+
+variable "hosted_zone_name" {
+  type        = string
+  description = "Route53 hosted zone name"
+}

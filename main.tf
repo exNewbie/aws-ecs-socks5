@@ -25,4 +25,6 @@ module "socks5" {
   vpc_id = data.aws_vpc.selected.id
 
   allowed_networks = concat(var.allowed_networks, ["${chomp(data.http.my_ip.response_body)}/32"])
+
+  hosted_zone_name = var.hosted_zone_name
 }

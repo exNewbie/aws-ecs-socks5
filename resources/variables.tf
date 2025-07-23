@@ -35,3 +35,7 @@ variable "aws_region" {
   description = "AWS region"
 }
 
+variable "hosted_zone_name" {
+  type        = string
+  description = "Route53 hosted zone name"
+}

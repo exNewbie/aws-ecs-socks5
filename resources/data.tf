@@ -4,10 +4,6 @@ data "template_file" "socks5" {
   vars = var.enable_auth ? local.template_file_vars : null
 }
 
-data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}
-
 data "aws_subnets" "subnets" {
   filter {
     name   = "vpc-id"
@@ -26,4 +22,20 @@ data "aws_ecs_task_execution" "running_task" {
     security_groups  = [aws_security_group.socks5.id]
     assign_public_ip = true
   }
+}
+data "aws_route53_zone" "zone" {
+  name         = var.hosted_zone_name
+  private_zone = false
+}
+
+data "external" "task_pub_ip" {
+  depends_on = [data.aws_ecs_task_execution.running_task]
+
+  program = [
+    "bash",
+    "${path.module}/get-task-pub-ip.sh",
+    var.aws_profile,
+    var.aws_region,
+    aws_ecs_cluster.socks5.name
+  ]
 }
