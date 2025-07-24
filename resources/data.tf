@@ -12,6 +12,8 @@ data "aws_subnets" "subnets" {
 }
 
 data "aws_ecs_task_execution" "running_task" {
+  count = data.external.count_tasks.result["count"] > 0 ? 0 : 1
+
   cluster         = aws_ecs_cluster.socks5.name
   task_definition = aws_ecs_task_definition.socks5.arn
   desired_count   = 1
@@ -33,9 +35,26 @@ data "external" "task_pub_ip" {
 
   program = [
     "bash",
-    "${path.module}/get-task-pub-ip.sh",
+    "${path.module}/scripts/get-task-pub-ip.sh",
     var.aws_profile,
     var.aws_region,
     aws_ecs_cluster.socks5.name
   ]
+}
+
+data "external" "count_tasks" {
+  depends_on = [
+    aws_ecs_cluster.socks5
+  ]
+
+  program = [
+    "/bin/bash",
+    "${path.module}/scripts/count-tasks.sh",
+    var.aws_profile
+  ]
+
+  query = {
+    cluster_name = "socks5"
+    aws_region   = var.aws_region
+  }
 }
