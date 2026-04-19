@@ -1,4 +1,4 @@
-resource "aws_route53_record" "www" {
+resource "aws_route53_record" "sock5" {
   zone_id = data.aws_route53_zone.zone.zone_id
   name    = "socks5.${substr(var.aws_region, 0, 2)}.${data.aws_route53_zone.zone.name}"
   type    = "A"
