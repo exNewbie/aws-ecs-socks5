@@ -1,6 +1,6 @@
 resource "aws_route53_record" "sock5" {
   zone_id = data.aws_route53_zone.zone.zone_id
-  name    = "socks5.${substr(var.aws_region, 0, 2)}.${data.aws_route53_zone.zone.name}"
+  name    = "socks5.${local.country_domain}.${data.aws_route53_zone.zone.name}"
   type    = "A"
   ttl     = "10"
   records = [
