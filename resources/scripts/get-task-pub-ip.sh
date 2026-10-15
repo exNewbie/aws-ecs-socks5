@@ -6,22 +6,39 @@ CLUSTER_NAME=${3:-"socks5"}
 
 AWS_CMD="aws --profile $AWS_PROFILE --region $AWS_REGION"
 
-task_id=$( $AWS_CMD ecs list-tasks --cluster $CLUSTER_NAME --query 'taskArns[0]' --output text 2> /dev/null )
-if [ -z "$task_id" ] || [ "$task_id" = "None" ]; then
-  echo "{ \"result\": \"No tasks found in cluster $CLUSTER_NAME.\" }"
+MAX_RETRIES=20
+RETRY_INTERVAL=10
 
-else
-    eni_id=$( $AWS_CMD ecs describe-tasks --cluster $CLUSTER_NAME --tasks $task_id --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value' --output text )
-    if [ -z "$eni_id" ] || [ "$eni_id" = "None" ]; then
-      echo "{ \"result\": \"No ENI found for task $task_id in cluster $CLUSTER_NAME.\" }"
-      exit 1
-    fi
+for i in $(seq 1 $MAX_RETRIES); do
+  task_id=$( $AWS_CMD ecs list-tasks --cluster $CLUSTER_NAME --query 'taskArns[0]' --output text 2>/dev/null )
 
-    taks_pub_ip=$( $AWS_CMD ec2 describe-network-interfaces --network-interface-ids $eni_id --query 'NetworkInterfaces[0].Association.PublicIp' --output text 2> /dev/null )
-    if [ -z "$taks_pub_ip" ] || [ "$taks_pub_ip" = "None" ]; then
-      echo "{ \"result\": \"No public IP found for ENI $eni_id.\" }"
-      exit 1
-    fi
+  if [ -z "$task_id" ] || [ "$task_id" = "None" ]; then
+    sleep $RETRY_INTERVAL
+    continue
+  fi
 
-    echo "{ \"result\": \"$taks_pub_ip\" }"
-fi
+  eni_id=$( $AWS_CMD ecs describe-tasks --cluster $CLUSTER_NAME --tasks $task_id \
+    --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value' \
+    --output text 2>/dev/null )
+
+  if [ -z "$eni_id" ] || [ "$eni_id" = "None" ]; then
+    sleep $RETRY_INTERVAL
+    continue
+  fi
+
+  task_pub_ip=$( $AWS_CMD ec2 describe-network-interfaces \
+    --network-interface-ids $eni_id \
+    --query 'NetworkInterfaces[0].Association.PublicIp' \
+    --output text 2>/dev/null )
+
+  if [ -z "$task_pub_ip" ] || [ "$task_pub_ip" = "None" ]; then
+    sleep $RETRY_INTERVAL
+    continue
+  fi
+
+  echo "{ \"result\": \"$task_pub_ip\" }"
+  exit 0
+done
+
+echo "Timed out waiting for public IP in cluster $CLUSTER_NAME" >&2
+exit 1
